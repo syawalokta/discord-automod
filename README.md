@@ -7,11 +7,10 @@ A powerful, advanced Discord moderation bot built with **Discord.js v14**, **Mon
 
 ---
 
-[**➕ Invite the Bot**](https://discord.com/oauth2/authorize?client_id=1363943273374154842&permissions=8&scope=bot%20applications.commands) · [**💬 Support Server**](https://discord.gg/QukxRRFhzQ)
+[**➕ Invite the Bot**](https://discord.com/oauth2/authorize?client_id=1514768763722137800&permissions=8&integration_type=0&scope=bot) · [**💬 Support Server**](https://discord.gg/cU9Jxxx3JX)
  ## support server 
  <p align="center">
   <a href="https://discord.gg/cU9Jxxx3JX">
-    <img src="https://cwkhan.is-a.dev/api/widget/svg?id=787315610102530048&n=%3C%2FCw+khan%3E&t=discord&m=562&o=30&b=https%3A%2F%2Fi.ibb.co%2F0phjK8NK%2Fb1b1f8f1a11b.png&ic=https%3A%2F%2Fi.ibb.co%2Fxq7kkNZg%2F0e7e946da3d8.jpg&inv=3c24dYbK83&d=Join+cwkhan+server+now&lp=center" alt="Cw Khan Discord Server" />
   </a>
 </p>
 ---
@@ -43,7 +42,7 @@ A powerful, advanced Discord moderation bot built with **Discord.js v14**, **Mon
 ### Installation
 
 ```bash
-git clone https://github.com/Khanmanan/automod-bot.git
+git clone https://github.com/syawalokta/discord-automod.git
 cd automod-bot
 npm install
 ```
@@ -176,6 +175,6 @@ MIT © 2026 Khanmanan
 
 ## 👤 Author
 
-**Khanmanan** · [GitHub](https://github.com/Khanmanan) · [Bot Repo](https://github.com/Khanmanan/automod-bot)
+**Khanmanan** · [GitHub](https://github.com/syawalokta) · [Bot Repo](https://github.com/syawalokta/discord-automod)
 
 "I don’t update this project anymore — it’s now maintained by AI."
