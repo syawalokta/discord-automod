@@ -5,6 +5,13 @@ const mongoose = require('mongoose');
 const path = require('path');
 const express = require('express');
 const deploy = require ('./deploy-commands.js')
+
+const authRoute = require('./routes/auth');
+
+const app = express();
+
+app.use('/auth', authRoute);
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -69,7 +76,6 @@ if (fs.existsSync(eventsPath)) {
 }
 
 // KeepAlive server for Replit
-const app = express();
 app.get('/', (req, res) => {
   res.send('Bot is alive!');
 });
