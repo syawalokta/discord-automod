@@ -64,40 +64,92 @@ router.get('/', async (req, res) => {
     });
 
     if (config) {
-      const guild = await global.client.guilds.fetch(
-        guildId
-      );
 
-      const member = await guild.members.fetch(
-        user.id
-      );
+      const guild =
+        await global.client.guilds.fetch(
+          guildId
+        );
+
+      const member =
+        await guild.members.fetch(
+          user.id
+        );
 
       await member.roles.add(
         config.roleId
       );
+
+      if (config.logChannelId) {
+
+        const logChannel =
+          guild.channels.cache.get(
+            config.logChannelId
+          );
+
+        if (logChannel) {
+
+          await logChannel.send({
+            embeds: [
+              {
+                title: '🔐 User Verified',
+                color: 0x57F287,
+
+                thumbnail: {
+                  url:
+                    `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                },
+
+                fields: [
+                  {
+                    name: 'User',
+                    value: `<@${user.id}>`,
+                    inline: true
+                  },
+                  {
+                    name: 'Username',
+                    value: user.username,
+                    inline: true
+                  },
+                  {
+                    name: 'Role Given',
+                    value: `<@&${config.roleId}>`,
+                    inline: true
+                  }
+                ],
+
+                timestamp: new Date()
+              }
+            ]
+          });
+
+        }
+
+      }
+
     }
 
     return res.send(`
       <html>
       <body style="
-        font-family:sans-serif;
-        background:#0f172a;
-        color:white;
-        text-align:center;
-        padding:50px;
+        font-family: sans-serif;
+        background: #0f172a;
+        color: white;
+        text-align: center;
+        padding: 50px;
       ">
+
         <h1>✅ Verification Success</h1>
 
         <img
           src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png"
           width="100"
-          style="border-radius:50%"
+          style="border-radius:50%;"
         />
 
         <h2>${user.username}</h2>
 
         <p>
-          Your Discord account has been authenticated.
+          Your Discord account has been successfully verified.
         </p>
 
       </body>

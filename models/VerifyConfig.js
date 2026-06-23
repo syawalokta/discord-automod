@@ -17,6 +17,11 @@ const verifyConfigSchema = new mongoose.Schema({
     required: true
   },
 
+  logChannelId: {
+    type: String,
+    default: null
+    },
+
   embed: {
     title: {
       type: String,

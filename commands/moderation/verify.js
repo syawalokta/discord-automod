@@ -43,68 +43,99 @@ module.exports = {
         )
     )
 
+    .addSubcommand(sub =>
+      sub
+        .setName('logs')
+        .setDescription('Set verification log channel')
+
+        .addChannelOption(option =>
+          option
+            .setName('channel')
+            .setDescription('Verification log channel')
+            .addChannelTypes(ChannelType.GuildText)
+            .setRequired(true)
+        )
+    )
+
     .setDefaultMemberPermissions(
       PermissionFlagsBits.Administrator
     ),
 
   async execute(interaction) {
+    const sub = interaction.options.getSubcommand();
 
-    const sub =
-      interaction.options.getSubcommand();
+    if (sub === 'logs') {
+      const channel =
+        interaction.options.getChannel('channel');
 
-    if (sub !== 'setup') return;
+      await VerifyConfig.findOneAndUpdate(
+        {
+          guildId: interaction.guild.id
+        },
+        {
+          guildId: interaction.guild.id,
+          logChannelId: channel.id
+        },
+        {
+          upsert: true
+        }
+      );
 
-    const message =
-      interaction.options.getString('message');
+      return interaction.reply({
+        content: `✅ Verification logs set to ${channel}`,
+        ephemeral: true
+      });
+    }
 
-    const role =
-      interaction.options.getRole('role');
+    if (sub === 'setup') {
+      const message =
+        interaction.options.getString('message');
 
-    const channel =
-      interaction.options.getChannel('channel') ||
-      interaction.channel;
+      const role =
+        interaction.options.getRole('role');
 
-    await VerifyConfig.findOneAndUpdate(
-      {
-        guildId: interaction.guild.id
-      },
-      {
-        guildId: interaction.guild.id,
-        roleId: role.id,
-        channelId: channel.id
-      },
-      {
-        upsert: true
-      }
-    );
+      const channel =
+        interaction.options.getChannel('channel') ||
+        interaction.channel;
 
-    const embed = new EmbedBuilder()
-      .setTitle('🔐 Server Verification')
-      .setDescription(message)
-      .setColor('#5865F2');
+      await VerifyConfig.findOneAndUpdate(
+        {
+          guildId: interaction.guild.id
+        },
+        {
+          guildId: interaction.guild.id,
+          roleId: role.id,
+          channelId: channel.id
+        },
+        {
+          upsert: true
+        }
+      );
 
-    const button =
-      new ButtonBuilder()
+      const embed = new EmbedBuilder()
+        .setTitle('🔐 Server Verification')
+        .setDescription(message)
+        .setColor('#5865F2');
+
+      const button = new ButtonBuilder()
         .setLabel('Verify')
         .setStyle(ButtonStyle.Link)
         .setURL(
           `https://verify.topinzpedia.web.id/auth/${interaction.guild.id}`
         );
 
-    const row =
-      new ActionRowBuilder()
+      const row = new ActionRowBuilder()
         .addComponents(button);
 
-    await channel.send({
-      embeds: [embed],
-      components: [row]
-    });
+      await channel.send({
+        embeds: [embed],
+        components: [row]
+      });
 
-    await interaction.reply({
-      content:
-        `✅ Verification panel created in ${channel}`,
-      ephemeral: true
-    });
-
+      return interaction.reply({
+        content: `✅ Verification panel created in ${channel}`,
+        ephemeral: true
+      });
+    }
   }
 };
