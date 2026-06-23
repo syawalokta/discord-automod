@@ -7,10 +7,12 @@ const express = require('express');
 const deploy = require ('./deploy-commands.js')
 
 const authRoute = require('./routes/auth');
+const callbackRoute = require('./routes/callback');
 
 const app = express();
 
 app.use('/auth', authRoute);
+app.use('/callback', callbackRoute);
 
 const client = new Client({
   intents: [
