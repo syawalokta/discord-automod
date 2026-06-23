@@ -27,6 +27,8 @@ const client = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.GuildMember, Partials.Reaction],
 });
 
+global.client = client;
+
 client.commands = new Collection();
 
 // Load commands
