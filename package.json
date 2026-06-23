@@ -3,6 +3,9 @@
   "version": "2.0.0",
   "description": "A powerful Discord moderation bot with automod, slash commands, advanced logging, and more",
   "main": "index.js",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "start": "node index.js",
     "deploy": "node deploy-commands.js"

@@ -26,7 +26,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
       { body: commands }
     );
 
-    console.log('✅ Successfully deployed slash commands!');
+    console.log(commands.map(c => c.name));
   } catch (error) {
     console.error('❌ Failed to deploy commands:', error);
   }
