@@ -168,11 +168,92 @@ module.exports = {
     });
 
     collector.on('end', async () => {
-      try {
-        await interaction.editReply({
-          components: [],
-        });
-      } catch (err) {}
+  try {
+    await interaction.editReply({
+      components: [],
     });
+  } catch (err) {}
+});
   },
+
+  async run(message) {
+
+    const commandsPath = path.join(__dirname, '..');
+
+    const folders = fs
+      .readdirSync(commandsPath)
+      .filter(folder =>
+        fs.lstatSync(
+          path.join(commandsPath, folder)
+        ).isDirectory()
+      );
+
+    const embed = new EmbedBuilder()
+      .setTitle('📚 Help Menu')
+      .setDescription(
+        'Use slash commands `/` or server prefix commands.'
+      )
+      .setColor(0x5865f2)
+      .setThumbnail(
+        message.client.user.displayAvatarURL()
+      );
+
+    for (const folder of folders) {
+
+      const folderPath =
+        path.join(commandsPath, folder);
+
+      const files =
+        fs.readdirSync(folderPath)
+          .filter(file =>
+            file.endsWith('.js')
+          );
+
+      const commands = [];
+
+      for (const file of files) {
+
+        try {
+
+          const command =
+            require(
+              path.join(
+                folderPath,
+                file
+              )
+            );
+
+          if (command.data?.name) {
+
+            commands.push(
+              `\`${command.data.name}\``
+            );
+
+          }
+
+        } catch (err) {}
+
+      }
+
+      if (!commands.length)
+        continue;
+
+      const icon =
+        categoryIcons[folder] || '📁';
+
+      embed.addFields({
+        name:
+          `${icon} ${folder.charAt(0).toUpperCase() + folder.slice(1)}`,
+        value:
+          commands.join(', '),
+        inline: false
+      });
+
+    }
+
+    return message.reply({
+      embeds: [embed]
+    });
+
+  }
 };
