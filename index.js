@@ -196,7 +196,13 @@ if (fs.existsSync(eventsPath)) {
 
 // KeepAlive server for Replit
 app.get('/', (req, res) => {
-  res.send('Bot is alive!');
+  res.sendFile(
+    path.join(
+      __dirname,
+      'views',
+      'index.html'
+    )
+  );
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
