@@ -195,6 +195,12 @@ if (fs.existsSync(eventsPath)) {
 }
 
 // KeepAlive server for Replit
+app.use(
+  express.static(
+    path.join(__dirname, 'public')
+  )
+);
+
 app.get('/', (req, res) => {
   res.sendFile(
     path.join(
@@ -203,6 +209,26 @@ app.get('/', (req, res) => {
       'index.html'
     )
   );
+});
+
+app.get('/api/stats', async (req, res) => {
+
+  const servers =
+    client.guilds.cache.size;
+
+  const users =
+    client.guilds.cache.reduce(
+      (total, guild) =>
+        total +
+        guild.memberCount,
+      0
+    );
+
+  res.json({
+    servers,
+    users
+  });
+
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

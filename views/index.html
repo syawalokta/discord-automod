@@ -1,67 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>Topinz Bot</title>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+  <link
+    rel="stylesheet"
+    href="/css/style.css"
+  >
 
-    body{
-      background:#0f172a;
-      color:white;
-      font-family:Inter,sans-serif;
-
-      display:flex;
-      justify-content:center;
-      align-items:center;
-
-      min-height:100vh;
-    }
-
-    .card{
-      text-align:center;
-      padding:40px;
-      border-radius:20px;
-
-      background:#111827;
-      border:1px solid #1f2937;
-    }
-
-    h1{
-      margin-bottom:10px;
-    }
-
-    p{
-      color:#94a3b8;
-    }
-
-    .status{
-      margin-top:20px;
-      color:#22c55e;
-      font-weight:600;
-    }
-  </style>
 </head>
+
 <body>
 
-  <div class="card">
-    <h1>🤖 Topinz Bot</h1>
+  <div class="container">
 
-    <p>
-      Discord Moderation &
-      Verification Bot
-    </p>
+    <div class="hero">
 
-    <div class="status">
-      ● Online
+      <h1>🤖 Topinz Bot</h1>
+
+      <p>
+        Advanced Discord Moderation,
+        Verification & Community Bot
+      </p>
+
     </div>
+
+    <div class="stats">
+
+      <div class="card">
+
+        <span id="servers">
+          0
+        </span>
+
+        <p>Servers</p>
+
+      </div>
+
+      <div class="card">
+
+        <span id="users">
+          0
+        </span>
+
+        <p>Users</p>
+
+      </div>
+
+      <div class="card">
+
+        <span>
+          Online
+        </span>
+
+        <p>Status</p>
+
+      </div>
+
+    </div>
+
+    <div class="buttons">
+
+      <a
+        href="https://discord.com/oauth2/authorize?client_id=CLIENT_ID&permissions=8&scope=bot%20applications.commands"
+        target="_blank"
+      >
+        Invite Bot
+      </a>
+
+      <a
+        href="https://verify.topinzpedia.web.id"
+        target="_blank"
+      >
+        Dashboard
+      </a>
+
+    </div>
+
   </div>
+
+  <script src="/js/app.js"></script>
 
 </body>
 </html>
