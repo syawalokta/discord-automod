@@ -1,5 +1,6 @@
 const InviteLog = require('../models/InviteLog');
 const InviteStats = require('../models/InviteStats');
+const InviteJoin = require('../models/InviteJoin');
 
 module.exports = {
   name: 'guildMemberAdd',
@@ -35,33 +36,62 @@ module.exports = {
 
     for (const invite of newInvites.values()) {
 
-      const previous =
-        oldInvites?.get(
-          invite.code
-        ) || 0;
+  const previous =
+    oldInvites?.get(
+      invite.code
+    ) || 0;
 
-      if (invite.uses > previous) {
+  if (invite.uses > previous) {
 
-        inviter =
-          invite.inviter;
+    inviter =
+      invite.inviter;
 
-        await InviteStats.findOneAndUpdate(
-          {
-            guildId: member.guild.id,
-            userId: inviter.id
-          },
-          {
-            $inc: {
-              invites: 1
-            }
-          },
-          {
-            upsert: true
+    const existingJoin =
+      await InviteJoin.findOne({
+        guildId:
+          member.guild.id,
+
+        userId:
+          member.id
+      });
+
+    if (!existingJoin) {
+
+      await InviteStats.findOneAndUpdate(
+        {
+          guildId:
+            member.guild.id,
+
+          userId:
+            inviter.id
+        },
+        {
+          $inc: {
+            invites: 1
           }
-        );
+        },
+        {
+          upsert: true
+        }
+      );
 
-        break;
-      }
+      await InviteJoin.create({
+        guildId:
+          member.guild.id,
+
+        userId:
+          member.id,
+
+        inviterId:
+          inviter.id
+      });
+
+    }
+
+    break;
+
+  }
+
     }
 
     member.client.invites.set(
