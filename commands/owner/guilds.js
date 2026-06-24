@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
-const OWNER_ID = '682981714523586606';
+const OWNER_ID = '1149501479594512534';
 
 module.exports = {
   data: new SlashCommandBuilder()
