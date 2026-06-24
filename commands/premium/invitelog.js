@@ -40,6 +40,29 @@ module.exports = {
     )
 
     .addSubcommand(sub =>
+  sub
+    .setName('edit')
+    .setDescription('Edit invite log')
+
+    .addStringOption(option =>
+      option
+        .setName('message')
+        .setDescription('New invite log message')
+        .setRequired(true)
+    )
+
+    .addChannelOption(option =>
+      option
+        .setName('channel')
+        .setDescription('New target channel')
+        .addChannelTypes(
+          ChannelType.GuildText
+        )
+        .setRequired(false)
+    )
+)
+
+    .addSubcommand(sub =>
       sub
         .setName('remove')
         .setDescription('Remove invite log')
@@ -118,6 +141,51 @@ module.exports = {
           `✅ Invite log set to ${channel}`,
         ephemeral: true
       });
+
+    }
+
+    if (sub === 'edit') {
+
+  const config =
+    await InviteLog.findOne({
+      guildId:
+        interaction.guild.id
+    });
+
+  if (!config) {
+
+    return interaction.reply({
+      content:
+        '❌ Invite log belum dibuat.',
+      ephemeral: true
+    });
+
+  }
+
+  const message =
+    interaction.options.getString(
+      'message'
+    );
+
+  const channel =
+    interaction.options.getChannel(
+      'channel'
+    );
+
+  config.message = message;
+
+  if (channel) {
+    config.channelId =
+      channel.id;
+  }
+
+  await config.save();
+
+  return interaction.reply({
+    content:
+      '✅ Invite log berhasil diupdate.',
+    ephemeral: true
+  });
 
     }
 
