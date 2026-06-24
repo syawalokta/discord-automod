@@ -6,6 +6,11 @@ const path = require('path');
 const express = require('express');
 const User = require('./models/User');
 
+// api
+const statsApi = require('./api/stats');
+const statusApi = require('./api/status');
+const botApi = require('./api/bot');
+
 const authRoute = require('./routes/auth');
 const callbackRoute = require('./routes/callback');
 
@@ -197,7 +202,10 @@ if (fs.existsSync(eventsPath)) {
 // KeepAlive server for Replit
 app.use(
   express.static(
-    path.join(__dirname, 'public')
+    path.join(
+      __dirname,
+      'public'
+    )
   )
 );
 
@@ -211,23 +219,20 @@ app.get('/', (req, res) => {
   );
 });
 
-app.get('/api/stats', async (req, res) => {
+app.use(
+  '/api/stats',
+  statsApi
+);
 
-  const servers =
-    client.guilds.cache.size;
+app.use(
+  '/api/status',
+  statusApi
+);
 
-  const users =
-    client.guilds.cache.reduce(
-      (total, guild) =>
-        total +
-        guild.memberCount,
-      0
-    );
-
-  res.json({
-    servers,
-    users
-  });
+app.use(
+  '/api/bot',
+  botApi
+);
 
 });
 const PORT = process.env.PORT || 3000;
