@@ -22,46 +22,19 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
 
-  rod: {
+  role: {
     type: String,
-    default: 'Basic Rod',
+    enum: [
+      'user',
+      'premium',
+      'owner'
+    ],
+    default: 'user',
   },
 
-  ownedRods: {
-  type: [String],
-  default: ['Basic Rod']
-  },
-
-  equippedBait: {
-  type: String,
-  default: 'WB01'
-  },
-
-  baits: {
-    worm: {
-      type: Number,
-      default: 5,
-    },
-
-    shrimp: {
-      type: Number,
-      default: 0,
-    },
-
-    premium: {
-      type: Number,
-      default: 0,
-    },
-
-    mythic: {
-      type: Number,
-      default: 0,
-    },
-
-    luck: {
-    type: Number,
-    default: 0
-    },
+  premiumUntil: {
+    type: Date,
+    default: null,
   },
 });
 
