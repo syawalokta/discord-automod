@@ -21,6 +21,7 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildModeration,
+    GatewayIntentBits.GuildInvites,
 
     GatewayIntentBits.GuildMessageReactions
   ],
@@ -30,6 +31,7 @@ const client = new Client({
 global.client = client;
 
 client.commands = new Collection();
+client.invites = new Collection();
 
 // Load commands
 const commandsPath = path.join(__dirname, 'commands');
@@ -44,12 +46,54 @@ fs.readdirSync(commandsPath).forEach(dir => {
 });
 
 // Status event
-client.once('clientReady', () => {
-  console.log(`✅ Bot ready as ${client.user.tag}`);
+client.once('clientReady', async () => {
+
+  console.log(
+    `✅ Bot ready as ${client.user.tag}`
+  );
+
   client.user.setPresence({
-    activities: [{ name: 'your server 👀', type: 3 }],
+    activities: [
+      {
+        name: 'your server 👀',
+        type: 3
+      }
+    ],
     status: 'online'
   });
+
+  try {
+
+    for (const guild of client.guilds.cache.values()) {
+
+      const invites =
+        await guild.invites.fetch();
+
+      client.invites.set(
+        guild.id,
+        new Map(
+          invites.map(inv => [
+            inv.code,
+            inv.uses
+          ])
+        )
+      );
+
+      console.log(
+        `📨 Cached ${invites.size} invites for ${guild.name}`
+      );
+
+    }
+
+  } catch (err) {
+
+    console.error(
+      '[Invite Cache]',
+      err
+    );
+
+  }
+
 });
 
 
