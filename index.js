@@ -4,7 +4,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const path = require('path');
 const express = require('express');
-const deploy = require ('./deploy-commands.js')
+const User = require('./models/User');
 
 const authRoute = require('./routes/auth');
 const callbackRoute = require('./routes/callback');
@@ -58,10 +58,81 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
+
   console.log('✅ Connected to MongoDB');
-  client.login(process.env.DISCORD_TOKEN);
+
+  setInterval(async () => {
+
+    try {
+
+      const expiredUsers =
+        await User.find({
+          role: 'premium',
+          premiumUntil: {
+            $ne: null,
+            $lt: new Date()
+          }
+        });
+
+      for (const user of expiredUsers) {
+
+        user.role = 'user';
+        user.premiumUntil = null;
+
+        await user.save();
+
+        console.log(
+          `⭐ Premium expired: ${user.userId}`
+        );
+
+        try {
+
+          const discordUser =
+            await client.users.fetch(
+              user.userId
+            );
+
+          await discordUser.send({
+            embeds: [
+              {
+                title:
+                  '⭐ Premium Expired',
+                description:
+                  'Masa aktif premium kamu telah berakhir.\n\nSilakan perpanjang premium untuk kembali menggunakan fitur premium.',
+                color:
+                  0xED4245,
+                timestamp:
+                  new Date()
+              }
+            ]
+          });
+
+        } catch (err) {}
+
+      }
+
+    } catch (err) {
+
+      console.error(
+        '[Premium Expire]',
+        err
+      );
+
+    }
+
+  }, 60 * 1000);
+
+  client.login(
+    process.env.DISCORD_TOKEN
+  );
+
 }).catch(err => {
-  console.error('❌ MongoDB connection error:', err);
+
+  console.error(
+    '❌ MongoDB connection error:',
+    err
+  );
+
 });
 
 // Event loader
