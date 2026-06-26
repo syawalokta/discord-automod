@@ -36,6 +36,7 @@ const client = new Client({
 global.client = client;
 
 client.commands = new Collection();
+client.selectMenus = new Collection();
 client.invites = new Collection();
 
 // Load commands
@@ -197,6 +198,41 @@ if (fs.existsSync(eventsPath)) {
       client.on(event.name, (...args) => event.execute(...args, client));
     }
   }
+}
+
+// Component
+const selectPath =
+  path.join(
+    __dirname,
+    'components',
+    'selectMenus'
+  );
+
+if (fs.existsSync(selectPath)) {
+
+  const files =
+    fs.readdirSync(selectPath)
+      .filter(file =>
+        file.endsWith('.js')
+      );
+
+  for (const file of files) {
+
+    const menu =
+      require(
+        path.join(
+          selectPath,
+          file
+        )
+      );
+
+    client.selectMenus.set(
+      menu.customId,
+      menu
+    );
+
+  }
+
 }
 
 // KeepAlive server for Replit
