@@ -44,6 +44,52 @@ module.exports = {
           )
       )
 
+    .addSubcommand(sub =>
+  sub
+
+    .setName('edit')
+    .setDescription('Edit product')
+
+    .addIntegerOption(option =>
+      option
+
+        .setName('id')
+        .setDescription('Product ID')
+        .setRequired(true)
+    )
+
+    .addStringOption(option =>
+      option
+
+        .setName('name')
+        .setDescription('New product name')
+        .setRequired(false)
+    )
+
+    .addStringOption(option =>
+      option
+
+        .setName('content')
+        .setDescription('New product content')
+        .setRequired(false)
+    )
+)
+
+    .addSubcommand(sub =>
+  sub
+
+    .setName('delete')
+    .setDescription('Delete product')
+
+    .addIntegerOption(option =>
+      option
+
+        .setName('id')
+        .setDescription('Product ID')
+        .setRequired(true)
+    )
+)
+
       .addSubcommand(sub =>
         sub
 
@@ -141,9 +187,131 @@ module.exports = {
     }
 
     /*
-     * LIST
-     */
+ * EDIT
+ */
 
+if (sub === 'edit') {
+
+  const id =
+    interaction.options.getInteger(
+      'id'
+    );
+
+  const name =
+    interaction.options.getString(
+      'name'
+    );
+
+  const content =
+    interaction.options.getString(
+      'content'
+    );
+
+  const product =
+    await Product.findOne({
+
+      guildId:
+        interaction.guild.id,
+
+      productId:
+        id
+
+    });
+
+  if (!product) {
+
+    return interaction.reply({
+
+      content:
+        '❌ Product tidak ditemukan.',
+
+      ephemeral: true
+
+    });
+
+  }
+
+  if (!name && !content) {
+
+    return interaction.reply({
+
+      content:
+        '❌ Berikan nama atau content baru.',
+
+      ephemeral: true
+
+    });
+
+  }
+
+  if (name)
+    product.name = name;
+
+  if (content)
+    product.content = content;
+
+  await product.save();
+
+  return interaction.reply({
+
+    content:
+      `✅ Product #${id} berhasil diupdate.`,
+
+    ephemeral: true
+
+  });
+
+}
+
+    /*
+ * DELETE
+ */
+
+if (sub === 'delete') {
+
+  const id =
+    interaction.options.getInteger(
+      'id'
+    );
+
+  const product =
+    await Product.findOne({
+
+      guildId:
+        interaction.guild.id,
+
+      productId:
+        id
+
+    });
+
+  if (!product) {
+
+    return interaction.reply({
+
+      content:
+        '❌ Product tidak ditemukan.',
+
+      ephemeral: true
+
+    });
+
+  }
+
+  await product.deleteOne();
+
+  return interaction.reply({
+
+    content:
+      `✅ Product #${id} berhasil dihapus.`,
+
+    ephemeral: true
+
+  });
+
+}
+    
+    // LIST
     if (sub === 'list') {
 
       const products =
