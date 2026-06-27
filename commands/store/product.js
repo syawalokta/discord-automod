@@ -35,6 +35,29 @@ module.exports = {
               .setRequired(true)
           )
 
+        .addSubcommand(sub =>
+  sub
+
+    .setName('update')
+    .setDescription('Update store panel')
+)
+
+            .addStringOption(option =>
+      option
+              
+        .setName('symbol')
+        .setDescription('Emoji / Symbol')
+        .setRequired(true)
+      )
+
+            .addStringOption(option =>
+      option
+              
+        .setName('description')
+        .setDescription('Short description')
+        .setRequired(true)
+    )
+
           .addStringOption(option =>
             option
 
@@ -143,6 +166,16 @@ module.exports = {
           'name'
         );
 
+      const symbol =
+  interaction.options.getString(
+    'symbol'
+  );
+
+const description =
+  interaction.options.getString(
+    'description'
+  );
+
       const content =
         interaction.options.getString(
           'content'
@@ -170,6 +203,10 @@ module.exports = {
         productId,
 
         name,
+
+        symbol,
+
+        description,
 
         content
 
@@ -350,7 +387,7 @@ if (sub === 'delete') {
 
             products.map(product =>
 
-              `**#${product.productId}** • ${product.name}`
+              `**#${product.productId}** ${product.symbol} ${product.name} > ${product.description}`
 
             ).join('\n')
 
@@ -367,6 +404,120 @@ if (sub === 'delete') {
       });
 
     }
+
+    /*
+ * UPDATE
+ */
+
+if (sub === 'update') {
+
+  const config =
+    await StoreConfig.findOne({
+      guildId:
+        interaction.guild.id
+    });
+
+  if (!config) {
+
+    return interaction.reply({
+
+      content:
+        '❌ Store panel belum dibuat.',
+
+      ephemeral: true
+
+    });
+
+  }
+
+  const products =
+    await Product.find({
+
+      guildId:
+        interaction.guild.id
+
+    }).sort({
+
+      productId: 1
+
+    });
+
+  if (!products.length) {
+
+    return interaction.reply({
+
+      content:
+        '❌ Belum ada product.',
+
+      ephemeral: true
+
+    });
+
+  }
+
+  const channel =
+    await interaction.guild.channels.fetch(
+      config.channelId
+    );
+
+  const message =
+    await channel.messages.fetch(
+      config.messageId
+    );
+
+  const menu =
+    new StringSelectMenuBuilder()
+
+      .setCustomId(
+        'store_select'
+      )
+
+      .setPlaceholder(
+        '📦 Pilih Produk'
+      )
+
+      .addOptions(
+
+        products.map(product => ({
+
+          label:
+            product.name,
+
+          description:
+            product.description,
+
+          emoji:
+            product.symbol,
+
+          value:
+            product.productId.toString()
+
+        }))
+
+      );
+
+  const row =
+    new ActionRowBuilder()
+      .addComponents(menu);
+
+  await message.edit({
+
+    components: [
+      row
+    ]
+
+  });
+
+  return interaction.reply({
+
+    content:
+      '✅ Store panel berhasil diupdate.',
+
+    ephemeral: true
+
+  });
+
+}
 
     //show
     if (sub === 'show') {
@@ -420,6 +571,9 @@ if (sub === 'delete') {
 
           description:
             `ID #${product.productId}`,
+
+          emoji: 
+            product.symbol,
 
           value:
             product.productId.toString()
