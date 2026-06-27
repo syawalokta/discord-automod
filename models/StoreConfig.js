@@ -21,6 +21,11 @@ const storeConfigSchema = new mongoose.Schema({
   panelMessage: {
     type: String,
     default: null
+  },
+
+  panelImage: {
+    type: String,
+    default: null
   }
 
 });

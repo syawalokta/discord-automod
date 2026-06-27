@@ -134,6 +134,13 @@ module.exports = {
         .setRequired(true)
     )
 
+          .addAttachmentOption(option =>
+      option
+        .setName('image')
+        .setDescription('Banner image')
+        .setRequired(false)
+    )
+
     .addChannelOption(option =>
   option
 
@@ -521,17 +528,10 @@ if (sub === 'update') {
 
     //show
     if (sub === 'show') {
-
-  const message =
-    interaction.options.getString(
-      'message'
-    );
-
-  const channel =
-    interaction.options.getChannel(
-      'channel'
-    ) ||
-    interaction.channel;
+      
+      const message = interaction.options.getString('message');
+      const image = interaction.options.getAttachment('image');
+      const channel = interaction.options.getChannel('channel') || interaction.channel;
 
   const products =
     await Product.find({
