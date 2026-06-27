@@ -507,13 +507,38 @@ if (sub === 'update') {
     new ActionRowBuilder()
       .addComponents(menu);
 
-  await message.edit({
+  const embed =
+  new EmbedBuilder()
 
-    components: [
-      row
-    ]
+    .setTitle(
+      '📦 Store'
+    )
 
-  });
+    .setDescription(
+      config.panelMessage
+    )
+
+    .setColor(
+      0x5865F2
+    );
+
+if (config.panelImage) {
+  embed.setImage(
+    config.panelImage
+  );
+}
+
+await message.edit({
+
+  embeds: [
+    embed
+  ],
+
+  components: [
+    row
+  ]
+
+});
 
   return interaction.reply({
 
@@ -528,10 +553,22 @@ if (sub === 'update') {
 
     //show
     if (sub === 'show') {
-      
-      const message = interaction.options.getString('message');
-      const image = interaction.options.getAttachment('image');
-      const channel = interaction.options.getChannel('channel') || interaction.channel;
+
+  const message =
+    interaction.options.getString(
+      'message'
+    );
+
+      const image =
+  interaction.options.getAttachment(
+    'image'
+  );
+
+  const channel =
+    interaction.options.getChannel(
+      'channel'
+    ) ||
+    interaction.channel;
 
   const products =
     await Product.find({
@@ -570,7 +607,7 @@ if (sub === 'update') {
             product.name,
 
           description:
-            `ID #${product.productId}`,
+          product.description,
 
           emoji: 
             product.symbol,
@@ -600,6 +637,10 @@ if (sub === 'update') {
       .setColor(
         0x5865F2
       );
+
+      if (image) { 
+        embed.setImage(image.url);
+      }
 
   const panel =
     await channel.send({
