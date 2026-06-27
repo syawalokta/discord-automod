@@ -35,13 +35,6 @@ module.exports = {
               .setRequired(true)
           )
 
-        .addSubcommand(sub =>
-  sub
-
-    .setName('update')
-    .setDescription('Update store panel')
-)
-
             .addStringOption(option =>
       option
               
@@ -66,6 +59,13 @@ module.exports = {
               .setRequired(true)
           )
       )
+
+    .addSubcommand(sub =>
+  sub
+
+    .setName('update')
+    .setDescription('Update store panel')
+)
 
     .addSubcommand(sub =>
   sub
