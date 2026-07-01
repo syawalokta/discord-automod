@@ -28,13 +28,32 @@ module.exports = {
                 await button.execute(interaction);
 
             } else if (interaction.isStringSelectMenu()) {
-                const menu = interaction.client.selectMenus?.get(interaction.customId);
-                if (!menu) {
-                    console.error(`No select menu handler matching ${interaction.customId} was found.`);
-                    return await interaction.reply({ content: '❌ This select menu is broken.', ephemeral: true });
-                }
+                const customId =
+    interaction.customId.split(':')[0];
 
-                await menu.execute(interaction);
+const menu =
+    interaction.client.selectMenus?.get(
+        customId
+    );
+
+if (!menu) {
+
+    console.error(
+        `No select menu handler matching ${customId} was found.`
+    );
+
+    return await interaction.reply({
+
+        content:
+            '❌ This select menu is broken.',
+
+        ephemeral: true
+
+    });
+
+}
+
+await menu.execute(interaction);
 
             } else if (interaction.isModalSubmit()) {
                 const modal = interaction.client.modals?.get(interaction.customId);

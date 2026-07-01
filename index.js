@@ -51,6 +51,48 @@ fs.readdirSync(commandsPath).forEach(dir => {
   }
 });
 
+// Load Select Menus
+const selectMenusPath = path.join(
+  __dirname,
+  'components',
+  'selectMenus'
+);
+
+if (fs.existsSync(selectMenusPath)) {
+
+  const files = fs
+    .readdirSync(selectMenusPath)
+    .filter(file => file.endsWith('.js'));
+
+  for (const file of files) {
+
+    const menu = require(
+      path.join(
+        selectMenusPath,
+        file
+      )
+    );
+
+    if (
+      menu.customId &&
+      menu.execute
+    ) {
+
+      client.selectMenus.set(
+        menu.customId,
+        menu
+      );
+
+      console.log(
+        `📋 Loaded Select Menu: ${menu.customId}`
+      );
+
+    }
+
+  }
+
+}
+
 // Status event
 client.once('clientReady', async () => {
 
