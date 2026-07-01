@@ -35,12 +35,22 @@ module.exports = async function updateStore(
     return;
 
   const message =
-    await channel.messages.fetch(
-      store.messageId
-    ).catch(() => null);
+  await channel.messages.fetch(
+    store.messageId
+  ).catch(() => null);
 
-  if (!message)
-    return;
+if (!message) {
+
+  await Store.deleteOne({
+
+    _id:
+      store._id
+
+  });
+
+  return;
+
+}
 
   const row =
     await createMenu(

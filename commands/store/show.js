@@ -37,28 +37,60 @@ module.exports = {
      */
 
     const exists =
-      await Store.findOne({
+  await Store.findOne({
 
-        guildId:
-          interaction.guild.id,
+    guildId:
+      interaction.guild.id,
 
-        channelId:
-          channel.id
+    channelId:
+      channel.id
 
-      });
+  });
 
-    if (exists) {
+if (exists) {
 
-      return interaction.reply({
+  const oldChannel =
+    await interaction.guild.channels
+      .fetch(
+        exists.channelId
+      )
+      .catch(() => null);
 
-        content:
-          `❌ Store pada ${channel} sudah dibuat.`,
+  const oldMessage =
+    oldChannel
+      ? await oldChannel.messages
+          .fetch(
+            exists.messageId
+          )
+          .catch(() => null)
+      : null;
 
-        ephemeral: true
+  if (oldMessage) {
 
-      });
+    return interaction.reply({
 
-    }
+      content:
+        `❌ Store pada ${channel} sudah dibuat.`,
+
+      ephemeral: true
+
+    });
+
+  }
+
+  /*
+   * Panel sudah dihapus
+   * bersihkan database
+   */
+
+  await Store.deleteOne({
+
+    _id:
+      exists._id
+
+  });
+
+}
 
     /*
      * CREATE MENU
