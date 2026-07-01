@@ -200,41 +200,6 @@ if (fs.existsSync(eventsPath)) {
   }
 }
 
-// Component
-const selectPath =
-  path.join(
-    __dirname,
-    'components',
-    'selectMenus'
-  );
-
-if (fs.existsSync(selectPath)) {
-
-  const files =
-    fs.readdirSync(selectPath)
-      .filter(file =>
-        file.endsWith('.js')
-      );
-
-  for (const file of files) {
-
-    const menu =
-      require(
-        path.join(
-          selectPath,
-          file
-        )
-      );
-
-    client.selectMenus.set(
-      menu.customId,
-      menu
-    );
-
-  }
-
-}
-
 // KeepAlive server for Replit
 app.use(
   express.static(
